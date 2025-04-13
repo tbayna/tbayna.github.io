@@ -204,6 +204,34 @@
             color: var(--secondary);
         }
 
+        /* Download CV Button */
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gradient);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139, 0, 0, 0.3);
+            background: linear-gradient(135deg, var(--dark-accent), var(--secondary));
+        }
+
+        .download-btn i {
+            font-size: 1rem;
+        }
+
         /* Sections */
         section {
             padding: 6rem 5vw;
@@ -501,6 +529,13 @@
             .card {
                 padding: 1.8rem;
             }
+
+            .download-btn {
+                margin: 1.5rem auto 0;
+                display: flex;
+                justify-content: center;
+                max-width: 200px;
+            }
         }
     </style>
 </head>
@@ -525,7 +560,7 @@
     <section class="hero">
         <div class="hero-content" data-aos="fade-up">
             <h1>Hicham Tbina</h1>
-            <h2>Ingénieur en Automatisme & Contrôle Industriel</h2>
+            <h2>Ingénieur en électrique & Contrôle Industriel</h2>
             <p>Spécialisé dans la conception de systèmes automatisés innovants et solutions énergétiques intelligentes.</p>
             <div class="contact-info">
                 <a href="mailto:eng.tbinahicham@gmail.com" class="contact-item">
@@ -538,6 +573,9 @@
                     <i class="fas fa-map-marker-alt"></i> Rabat, Maroc
                 </span>
             </div>
+            <a href="cv.pdf" download="CV_Hicham_Tbina.pdf" class="download-btn">
+                <i class="fas fa-download"></i> Télécharger CV
+            </a>
         </div>
     </section>
 
@@ -560,8 +598,9 @@
                     <h3>Soft Skills</h3>
                     <div class="tags">
                         <span class="tag">Flexibilité</span>
-                        <span class="tag">Travail d'équipe</span>
+                        <span class="tag">managment d'équipe</span>
                         <span class="tag">Gestion de projet</span>
+                        <span class="tag">Resolution de problemes</span>
                         <span class="tag">Communication technique</span>
                     </div>
                 </div>
@@ -590,8 +629,10 @@
                     <h3>Expertise Technique</h3>
                     <div class="tags">
                         <span class="tag">PLC Programming</span>
+                        <span class="tag">non lineaire systems controle</span>
+                        <span class="tag">Systems modulation and controle</span>
                         <span class="tag">SCADA Systems</span>
-                        <span class="tag">les protocol de communication</span>
+                        <span class="tag">communication protocols</span>
                         <span class="tag">Power Electronics</span>
                         <span class="tag">HMI Integration</span>
                     </div>
@@ -792,12 +833,17 @@
                     <i class="fas fa-map-marker-alt"></i> Rabat, Maroc
                 </span>
             </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="cv.pdf" download="CV_Hicham_Tbina.pdf" class="download-btn">
+                    <i class="fas fa-download"></i> Télécharger mon CV complet
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <p>© 2025 Hicham Tbina. Tous droits réservés.</p>
+        <p>© 2023 Hicham Tbina. Tous droits réservés.</p>
         <p>Conçu avec <i class="fas fa-heart" style="color: #ff6b6b;"></i> par Hicham Tbina</p>
     </footer>
 
