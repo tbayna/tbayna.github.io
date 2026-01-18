@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gym Pro V5: Custom Edition</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0ea5e9',
+                        dark: '#0f172a',
+                        darkCard: '#1e293b',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { transition: background-color 0.3s; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .slide-enter { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-dark text-gray-900 dark:text-gray-100 min-h-screen pb-24">
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+// --- ICONS ---
+const Icons = {
+    Sun: () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>,
+    Moon: () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
+    User: () => <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+    Chart: () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+    Check: () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>,
+    Water: () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 6c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>,
+    LogOut: () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
+    TrendingUp: () => <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+    Edit: () => <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+};
+
+// --- DATA ---
+const DEFAULT_PROGRAM = [
+  {
+    id: 'chest',
+    label: "Chest & Swim",
+    focus: "Pec Thickness & Water Comfort",
+    swim: {
+      title: "Swim A: Foundation",
+      part1: { name: "Breathing", desc: "Bobbing (Rhythmic Breathing). Fully exhale underwater. 3 mins." },
+      part2: { name: "Technique", desc: "Wall Kicking. Hold wall, face in water, rotate head to breathe only. 10 mins." },
+      part3: { name: "Endurance", desc: "4 x 25m Freestyle. Rest 45s between laps. Focus on calm." }
+    },
+    exercises: [
+      { id: 'm1', name: 'Incline DB Press', norm: 'Goal: 0.8x BW', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80', sets: 4, reps: '8-12', tip: '30-45° angle. Tuck elbows slightly.' },
+      { id: 'm2', name: 'Flat Machine Press', norm: 'Goal: 1x BW', img: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=600&q=80', sets: 3, reps: '10-15', tip: 'Drive back into pad. Push to failure safely.' },
+      { id: 'm3', name: 'Weighted Dips', norm: 'Goal: +10kg', img: 'https://images.unsplash.com/photo-1598575435253-79a0e6e12d93?auto=format&fit=crop&w=600&q=80', sets: 3, reps: '8-12', tip: 'Lean forward to hit lower chest.' },
+      { id: 'm4', name: 'Cable Flys', norm: 'Focus: Stretch', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80', sets: 3, reps: '12-15', tip: 'Take last set to failure. Deep stretch.' }
+    ]
+  },
+  {
+    id: 'back',
+    label: "Back & Lats",
+    focus: "Width & Swim Pulling Power",
+    swim: null, 
+    exercises: [
+      { id: 'tu1', name: 'Lat Pulldown', norm: 'Goal: 0.8x BW', img: 'https://images.unsplash.com/photo-1605296867424-35fc25c9212a?auto=format&fit=crop&w=600&q=80', sets: 4, reps: '10-12', tip: 'Drive elbows down to hips.' },
+      { id: 'tu2', name: 'Chest Support Row', norm: 'Goal: 0.8x BW', img: 'https://images.unsplash.com/photo-1605296867424-35fc25c9212a?auto=format&fit=crop&w=600&q=80', sets: 4, reps: '10-12', tip: 'Allow scapula to spread at bottom.' },
+      { id: 'tu3', name: 'Straight-Arm Pull', norm: 'Focus: Lats', img: 'https://images.unsplash.com/photo-1517963879466-e9b5ce3825bf?auto=format&fit=crop&w=600&q=80', sets: 3, reps: '12-15', tip: 'Keep arms straight. Mimics swim catch.' }
+    ]
+  },
+  {
+    id: 'legs',
+    label: "Legs & Swim",
+    focus: "Lower Body & Buoyancy",
+    swim: {
+      title: "Swim B: Body Position",
+      part1: { name: "Breathing", desc: "3-5-7 Drill. Breathe every 3 strokes, then 5, then 7. Calms heart rate." },
+      part2: { name: "Technique", desc: "Dead Man Float -> Glide. Learn to trust the water holding you up. 10 mins." },
+      part3: { name: "Endurance", desc: "Pyramid: 25m, 50m, 25m. Constant pace. Use Pull Buoy if legs are dead." }
+    },
+    exercises: [
+      { id: 'w1', name: 'Hamstring Curl', norm: 'Goal: 0.5x BW', img: 'https://images.unsplash.com/photo-1579364046732-c21c2177c3e9?auto=format&fit=crop&w=600&q=80', sets: 4, reps: '10-15', tip: 'Lean forward to stretch hams.' },
+      { id: 'w2', name: 'Smith Squat', norm: 'Goal: 1.5x BW', img: 'https://images.unsplash.com/photo-1574680096141-1cddd32e0340?auto=format&fit=crop&w=600&q=80', sets: 4, reps: '8-10', tip: 'Feet forward. Drop deep.' },
+      { id: 'w3', name: 'RDL', norm: 'Goal: 1.2x BW', img: 'https://images.unsplash.com/photo-1567598508481-65985586e295?auto=format&fit=crop&w=600&q=80', sets: 3, reps: '8-10', tip: 'Hips back. Soft knees.' },
+      { id: 'w4', name: 'Leg Ext (Partials)', norm: 'Focus: Burn', img: 'https://images.unsplash.com/photo-1579364046732-c21c2177c3e9?auto=format&fit=crop&w=600&q=80', sets: 3, reps: '15+', tip: 'Bottom half reps only.' }
+    ]
+  },
+  {
+    id: 'shoulders',
+    label: "Shoulders & Posture",
+    focus: "3D Delts & Injury Prevention",
+    swim: null,
+    exercises: [
+      { id: 'th1', name: 'Overhead Press', norm: 'Goal: 0.6x BW', img: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80', sets: 4, reps: '8-10', tip: 'Core tight, no arching.' },
+      { id: 'th2', name: 'Cable Lat Raise', norm: 'Focus: Width', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80', sets: 4, reps: '12-15', tip: 'Cable at wrist height.' },
+      { id: 'th3', name: 'Face Pulls', norm: 'Focus: Posture', img: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=600&q=80', sets: 3, reps: '15-20', tip: 'External rotation. Thumbs back.' }
+    ]
+  },
+  {
+    id: 'arms',
+    label: "Arms & Swim",
+    focus: "Bicep/Tricep & Stroke Finish",
+    swim: {
+      title: "Swim C: Efficiency",
+      part1: { name: "Breathing", desc: "Single Arm Freestyle. Breathe on the side of the stroking arm only." },
+      part2: { name: "Technique", desc: "Catch-Up Drill. One hand touches the other before the next stroke begins." },
+      part3: { name: "Endurance", desc: "Continuous Swim: 10-15 mins. Do not touch wall or floor. Go slow." }
+    },
+    exercises: [
+      { id: 'f1', name: 'O.H. Tricep Ext', norm: 'Focus: Stretch', img: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80', sets: 4, reps: '10-12', tip: 'Elbows close to head.' },
+      { id: 'f2', name: 'Bayesian Curl', norm: 'Focus: Peak', img: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=600&q=80', sets: 4, reps: '10-12', tip: 'Face away from cable. Arms behind.' },
+      { id: 'f3', name: 'Tricep Rope', norm: 'Focus: Lockout', img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=600&q=80', sets: 3, reps: '12-15', tip: 'Spread rope at bottom.' }
+    ]
+  }
+];
+
+// --- COMPONENTS ---
+
+const ThemeToggle = ({ isDark, toggle }) => (
+    <button onClick={toggle} className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-yellow-400 transition-all">
+        {isDark ? <Icons.Sun /> : <Icons.Moon />}
+    </button>
+);
+
+const SwimCard = ({ swim }) => {
+    if (!swim) return null;
+    return (
+        <div className="bg-gradient-to-br from-sky-500 to-blue-700 rounded-2xl p-5 text-white mb-6 shadow-lg shadow-blue-500/20">
+            <div className="flex items-center gap-2 mb-4 border-b border-white/20 pb-3">
+                <div className="bg-white/20 p-2 rounded-lg"><Icons.Water /></div>
+                <div>
+                    <h3 className="font-bold text-lg leading-none">{swim.title}</h3>
+                    <span className="text-xs text-blue-100 opacity-80">3-Part Protocol</span>
+                </div>
+            </div>
+            
+            <div className="space-y-3">
+                <div className="bg-white/10 p-3 rounded-lg border border-white/10 flex gap-3">
+                    <span className="text-xl font-bold text-blue-300">01</span>
+                    <div>
+                        <div className="text-xs font-bold text-blue-200 uppercase tracking-widest">{swim.part1.name}</div>
+                        <div className="text-sm opacity-90">{swim.part1.desc}</div>
+                    </div>
+                </div>
+                <div className="bg-white/10 p-3 rounded-lg border border-white/10 flex gap-3">
+                    <span className="text-xl font-bold text-blue-300">02</span>
+                    <div>
+                        <div className="text-xs font-bold text-blue-200 uppercase tracking-widest">{swim.part2.name}</div>
+                        <div className="text-sm opacity-90">{swim.part2.desc}</div>
+                    </div>
+                </div>
+                <div className="bg-white/10 p-3 rounded-lg border border-white/10 flex gap-3">
+                    <span className="text-xl font-bold text-blue-300">03</span>
+                    <div>
+                        <div className="text-xs font-bold text-blue-200 uppercase tracking-widest">{swim.part3.name}</div>
+                        <div className="text-sm opacity-90">{swim.part3.desc}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const AnalyticsBoard = ({ history }) => {
+    const latestStats = React.useMemo(() => {
+        const stats = {};
+        history.forEach(entry => {
+            if (!entry.data) return;
+            Object.entries(entry.data).forEach(([exId, sets]) => {
+                let name = exId;
+                DEFAULT_PROGRAM.forEach(group => {
+                    const found = group.exercises.find(e => e.id === exId);
+                    if (found) name = found.name;
+                });
+
+                let bestSetWeight = 0;
+                let bestSetReps = 0;
+                
+                Object.values(sets).forEach(set => {
+                    if (set.reps && set.weight) {
+                        const w = parseFloat(set.weight);
+                        if (w > bestSetWeight) {
+                            bestSetWeight = w;
+                            bestSetReps = set.reps;
+                        }
+                    }
+                });
+
+                if (bestSetWeight > 0) {
+                    stats[exId] = {
+                        name: name,
+                        weight: bestSetWeight,
+                        reps: bestSetReps,
+                        date: entry.date
+                    };
+                }
+            });
+        });
+        return Object.values(stats).reverse();
+    }, [history]);
+
+    if (!history.length) return (
+        <div className="text-center p-8 text-gray-500 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl">
+            No training data yet. <br/> Complete a workout to see your reference stats.
+        </div>
+    );
+
+    return (
+        <div className="space-y-4">
+            <h3 className="font-bold text-lg flex items-center gap-2 text-primary">
+                <Icons.TrendingUp /> Latest Reference
+            </h3>
+            <div className="grid grid-cols-1 gap-3">
+                {latestStats.map((stat, idx) => (
+                    <div key={idx} className="bg-white dark:bg-darkCard p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                        <div className="flex-1">
+                            <h4 className="font-bold text-sm text-gray-800 dark:text-gray-100">{stat.name}</h4>
+                            <div className="text-xs text-gray-400">Last: {stat.date}</div>
+                        </div>
+                        <div className="text-right">
+                             <div className="flex items-end gap-1 justify-end">
+                                <span className="text-primary font-mono font-bold text-lg">{stat.weight}</span>
+                                <span className="text-xs font-bold text-gray-400 mb-1">kg</span>
+                                <span className="text-gray-400 mx-1">x</span>
+                                <span className="text-gray-600 dark:text-gray-300 font-mono font-bold text-lg">{stat.reps}</span>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const ExerciseCard = ({ ex, onLog, onUpdateImage, suggestion }) => {
+    const [isEditingImg, setIsEditingImg] = React.useState(false);
+    const [imgUrl, setImgUrl] = React.useState(ex.img);
+
+    const handleSaveImage = (e) => {
+        e.preventDefault();
+        onUpdateImage(ex.id, imgUrl);
+        setIsEditingImg(false);
+    };
+
+    return (
+        <div className="bg-white dark:bg-darkCard rounded-2xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-700 mb-6 transition-all">
+            <div className="h-48 bg-gray-800 relative overflow-hidden group">
+                <img 
+                    src={ex.img} 
+                    alt={ex.name} 
+                    className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {e.target.src='https://placehold.co/600x400/1f2937/FFF?text=Paste+Image+URL'}}
+                />
+                
+                {/* Overlay content */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-4">
+                    <div className="flex justify-between items-end">
+                        <h3 className="text-2xl font-bold text-white drop-shadow-md">{ex.name}</h3>
+                        <button 
+                            onClick={() => setIsEditingImg(!isEditingImg)}
+                            className="bg-white/20 hover:bg-white/40 p-2 rounded-full backdrop-blur-sm text-white transition-all"
+                        >
+                            <Icons.Edit />
+                        </button>
+                    </div>
+                    <div className="flex justify-between items-center text-gray-200 text-sm font-medium mt-1">
+                        <span className="flex items-center gap-1 bg-black/40 px-2 py-1 rounded backdrop-blur-sm border border-white/10">{ex.sets} Sets × {ex.reps}</span>
+                        <span className="bg-primary text-white px-2 py-1 rounded text-xs font-bold shadow-sm">{ex.norm}</span>
+                    </div>
+                </div>
+
+                {/* Image Editor */}
+                {isEditingImg && (
+                    <div className="absolute inset-0 bg-black/90 flex items-center justify-center p-4 z-20">
+                        <form onSubmit={handleSaveImage} className="w-full">
+                            <label className="text-white text-xs uppercase font-bold mb-2 block">Paste New Image URL:</label>
+                            <input 
+                                className="w-full bg-gray-800 text-white p-3 rounded mb-2 border border-gray-600"
+                                value={imgUrl}
+                                onChange={(e) => setImgUrl(e.target.value)}
+                                placeholder="https://..."
+                            />
+                            <div className="flex gap-2">
+                                <button type="submit" className="flex-1 bg-primary text-white p-2 rounded font-bold">Save</button>
+                                <button type="button" onClick={() => setIsEditingImg(false)} className="flex-1 bg-gray-700 text-white p-2 rounded">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                )}
+            </div>
+
+            <div className="p-4">
+                <div className="flex items-start gap-3 mb-4 bg-amber-50 dark:bg-amber-900/20 p-3 rounded-xl border border-amber-100 dark:border-amber-800/50">
+                    <div className="text-lg">💡</div>
+                    <p className="text-sm text-amber-900 dark:text-amber-100 leading-tight pt-0.5 font-medium">{ex.tip}</p>
+                </div>
+
+                <div className="mb-4 text-center bg-gray-50 dark:bg-gray-800 p-2 rounded-lg border border-gray-100 dark:border-gray-700">
+                    <div className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Target for Today</div>
+                    <div className="text-primary font-mono font-bold">{suggestion}</div>
+                </div>
+
+                <div className="space-y-3">
+                    {Array.from({ length: ex.sets }).map((_, i) => (
+                        <div key={i} className="flex gap-2 items-center">
+                            <span className="w-8 text-gray-400 font-bold text-sm">#{i+1}</span>
+                            <div className="flex-1 relative">
+                                <input type="number" className="w-full bg-gray-100 dark:bg-gray-800 rounded-lg p-3 text-center outline-none focus:ring-2 focus:ring-primary font-mono text-lg font-bold" onChange={(e) => onLog(ex.id, i, 'weight', e.target.value)} />
+                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 font-bold pointer-events-none">KG</span>
+                            </div>
+                            <div className="flex-1 relative">
+                                <input type="number" className="w-full bg-gray-100 dark:bg-gray-800 rounded-lg p-3 text-center outline-none focus:ring-2 focus:ring-primary font-mono text-lg font-bold" onChange={(e) => onLog(ex.id, i, 'reps', e.target.value)} />
+                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 font-bold pointer-events-none">REPS</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// --- MAIN APP ---
+
+function App() {
+    const [isDark, setIsDark] = React.useState(true);
+    const [users, setUsers] = React.useState([]);
+    const [activeUserId, setActiveUserId] = React.useState(null);
+    const [activeTab, setActiveTab] = React.useState('dashboard');
+    const [selectedMuscleId, setSelectedMuscleId] = React.useState('chest');
+    const [workoutData, setWorkoutData] = React.useState({});
+    
+    // State to hold custom images (persisted)
+    const [customImages, setCustomImages] = React.useState({});
+
+    // Derived State
+    const activeUser = users.find(u => u.id === activeUserId);
+    const history = activeUser ? (activeUser.history || []) : [];
+    
+    // Merge Default Program with Custom Images
+    const currentProgramRaw = DEFAULT_PROGRAM.find(p => p.id === selectedMuscleId) || DEFAULT_PROGRAM[0];
+    const currentProgram = {
+        ...currentProgramRaw,
+        exercises: currentProgramRaw.exercises.map(ex => ({
+            ...ex,
+            img: customImages[ex.id] || ex.img // Use custom if exists, else default
+        }))
+    };
+
+    React.useEffect(() => {
+        const storedUsers = localStorage.getItem('gymApp_users_v5');
+        const storedImages = localStorage.getItem('gymApp_images_v5');
+        
+        if (storedUsers) setUsers(JSON.parse(storedUsers));
+        if (storedImages) setCustomImages(JSON.parse(storedImages));
+
+        if (localStorage.getItem('gymApp_theme_v5') === 'light') {
+            setIsDark(false);
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+        }
+    }, []);
+
+    React.useEffect(() => { localStorage.setItem('gymApp_users_v5', JSON.stringify(users)); }, [users]);
+    React.useEffect(() => { localStorage.setItem('gymApp_images_v5', JSON.stringify(customImages)); }, [customImages]);
+
+    const toggleTheme = () => {
+        const newVal = !isDark;
+        setIsDark(newVal);
+        localStorage.setItem('gymApp_theme_v5', newVal ? 'dark' : 'light');
+        document.documentElement.classList.toggle('dark', newVal);
+    };
+
+    const handleCreateUser = (name) => {
+        if (!name) return;
+        const newUser = { id: Date.now(), name, history: [] };
+        setUsers([...users, newUser]);
+        setActiveUserId(newUser.id);
+    };
+
+    const handleLogSet = (exId, setIndex, field, value) => {
+        setWorkoutData(prev => ({
+            ...prev,
+            [exId]: { ...prev[exId], [setIndex]: { ...prev[exId]?.[setIndex], [field]: value } }
+        }));
+    };
+
+    const handleUpdateImage = (exId, newUrl) => {
+        setCustomImages(prev => ({
+            ...prev,
+            [exId]: newUrl
+        }));
+    };
+
+    const finishWorkout = () => {
+        if (!activeUser) return;
+        const newEntry = {
+            date: new Date().toLocaleDateString(),
+            muscleGroup: currentProgram.label,
+            data: workoutData,
+            timestamp: Date.now()
+        };
+        const updatedUsers = users.map(u => {
+            if (u.id === activeUserId) return { ...u, history: [...u.history, newEntry] };
+            return u;
+        });
+        setUsers(updatedUsers);
+        setWorkoutData({});
+        alert("Workout Saved!");
+    };
+
+    const getSuggestion = (exId, targetReps) => {
+        if (!history.length) return "Establish Baseline";
+        const lastEntry = [...history].reverse().find(h => h.data[exId]);
+        if (!lastEntry) return "Establish Baseline";
+        
+        const lastSets = lastEntry.data[exId];
+        if (!lastSets) return "Establish Baseline";
+
+        let bestSet = { weight: 0, reps: 0 };
+        Object.values(lastSets).forEach(s => {
+            if (parseFloat(s.weight) > bestSet.weight) bestSet = s;
+        });
+        
+        if (!bestSet.weight) return "Track to see data";
+
+        const maxTarget = parseInt(targetReps.split('-')[1] || targetReps);
+        if (parseInt(bestSet.reps) >= maxTarget) {
+            return `Try ${parseFloat(bestSet.weight) + 2.5}kg`;
+        }
+        return `Beat ${bestSet.weight}kg x ${bestSet.reps}`;
+    };
+
+    // User Login Component (Inline)
+    if (!activeUser) return (
+        <div className="fixed inset-0 z-50 bg-white dark:bg-dark flex flex-col items-center justify-center p-6 slide-enter">
+            <div className="text-center mb-8">
+                <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600 mb-2">IRON & AQUA</h1>
+                <p className="text-gray-500">Hybrid Athlete Tracker V5</p>
+            </div>
+            <div className="w-full max-w-sm space-y-3">
+                {users.map(u => (
+                    <button key={u.id} onClick={() => setActiveUserId(u.id)} className="w-full p-4 rounded-xl bg-gray-100 dark:bg-darkCard border border-gray-200 dark:border-gray-700 flex items-center justify-between hover:border-primary transition-all shadow-sm group">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-sky-100 dark:bg-sky-900 p-2 rounded-full text-primary group-hover:scale-110 transition-transform"><Icons.User /></div>
+                            <span className="font-bold text-lg">{u.name}</span>
+                        </div>
+                        <span className="text-gray-400 group-hover:translate-x-1 transition-transform">&rarr;</span>
+                    </button>
+                ))}
+                <form onSubmit={(e) => { e.preventDefault(); handleCreateUser(e.target.elements.name.value); }} className="mt-4 flex gap-2">
+                    <input name="name" autoFocus placeholder="New User Name" className="flex-1 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 outline-none focus:ring-2 focus:ring-primary" />
+                    <button className="bg-primary text-white p-3 rounded-xl font-bold">Add</button>
+                </form>
+            </div>
+        </div>
+    );
+
+    return (
+        <div className="max-w-md mx-auto slide-enter">
+            {/* Top Bar */}
+            <div className="flex justify-between items-center p-4 bg-white dark:bg-darkCard sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 shadow-sm backdrop-blur-md bg-opacity-90">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-sky-500/30">
+                        {activeUser.name[0]}
+                    </div>
+                    <div>
+                        <h1 className="font-bold text-sm leading-none">{activeUser.name}</h1>
+                        <span className="text-[10px] text-primary uppercase font-bold tracking-wider">Level 1 Athlete</span>
+                    </div>
+                </div>
+                <div className="flex gap-2">
+                    <ThemeToggle isDark={isDark} toggle={toggleTheme} />
+                    <button onClick={() => setActiveUserId(null)} className="p-2 text-gray-400 hover:text-red-500"><Icons.LogOut /></button>
+                </div>
+            </div>
+
+            {/* Tabs */}
+            <div className="flex p-3 gap-3 bg-gray-50 dark:bg-dark sticky top-[73px] z-30 border-b border-gray-200 dark:border-gray-800">
+                <button onClick={() => setActiveTab('dashboard')} className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${activeTab === 'dashboard' ? 'bg-white dark:bg-darkCard shadow-md text-primary ring-2 ring-primary/10' : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}`}>Dashboard</button>
+                <button onClick={() => setActiveTab('workout')} className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all duration-300 ${activeTab === 'workout' ? 'bg-white dark:bg-darkCard shadow-md text-primary ring-2 ring-primary/10' : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}`}>Train</button>
+            </div>
+
+            <div className="p-4">
+                {activeTab === 'dashboard' && (
+                    <div className="space-y-6">
+                        <div className="bg-gradient-to-r from-sky-500 to-blue-600 rounded-2xl p-6 text-white shadow-xl shadow-blue-500/20 relative overflow-hidden">
+                            <div className="relative z-10">
+                                <div className="text-blue-100 text-xs font-bold uppercase tracking-widest mb-1">Total Sessions</div>
+                                <div className="text-5xl font-black">{history.length}</div>
+                            </div>
+                        </div>
+                        <AnalyticsBoard history={history} />
+                    </div>
+                )}
+
+                {activeTab === 'workout' && (
+                    <div className="space-y-6">
+                        <div className="flex overflow-x-auto gap-3 pb-2 no-scrollbar">
+                            {DEFAULT_PROGRAM.map(prog => (
+                                <button key={prog.id} onClick={() => setSelectedMuscleId(prog.id)} className={`px-5 py-3 rounded-xl whitespace-nowrap font-bold text-sm transition-all flex-shrink-0 ${selectedMuscleId === prog.id ? 'bg-primary text-white shadow-lg shadow-sky-500/30 ring-2 ring-white dark:ring-dark' : 'bg-white dark:bg-darkCard text-gray-500 border border-gray-200 dark:border-gray-700'}`}>
+                                    {prog.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="text-center mb-2">
+                            <h2 className="text-2xl font-black text-gray-900 dark:text-white">{currentProgram.label}</h2>
+                            <p className="text-gray-500 text-xs font-bold uppercase tracking-widest">{currentProgram.focus}</p>
+                        </div>
+
+                        <SwimCard swim={currentProgram.swim} />
+
+                        <div>
+                            {currentProgram.exercises.map(ex => (
+                                <ExerciseCard 
+                                    key={ex.id} 
+                                    ex={ex} 
+                                    onLog={handleLogSet} 
+                                    onUpdateImage={handleUpdateImage}
+                                    suggestion={getSuggestion(ex.id, ex.reps)}
+                                />
+                            ))}
+                        </div>
+
+                        <button onClick={finishWorkout} className="w-full py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-2xl shadow-xl shadow-green-500/30 active:scale-95 transition-transform flex items-center justify-center gap-3 text-lg">
+                            <Icons.Check /> Finish Workout
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+
+</script>
+</body>
+</html>
