@@ -1,0 +1,118 @@
+/* Custom Styles for Portfolio */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #050505;
+    color: #ffffff;
+}
+
+/* Hide scrollbar but keep functionality */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #050505; 
+}
+::-webkit-scrollbar-thumb {
+    background: #333; 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #22d3ee; 
+}
+
+/* Custom Selection */
+::selection {
+    background-color: #22d3ee;
+    color: #000;
+}
+
+/* Three.js Canvas */
+#webgl-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    opacity: 0.6;
+}
+
+/* Navigation Hover Effects */
+.nav-link {
+    position: relative;
+}
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #22d3ee;
+    transition: width 0.3s ease;
+}
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* GSAP Character Split Text */
+.char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(100px);
+}
+
+/* Project Card Hover */
+.project-card {
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    background: rgba(25, 25, 30, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.project-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(34, 211, 238, 0.4);
+    box-shadow: 0 20px 40px -10px rgba(34, 211, 238, 0.15);
+}
+
+.project-card .project-img-container {
+    overflow: hidden;
+}
+.project-card .project-img {
+    transition: transform 0.7s ease;
+}
+.project-card:hover .project-img {
+    transform: scale(1.1);
+}
+
+/* Overlay Smooth Opening */
+.overlay-open {
+    transform: translateY(0) !important;
+}
+
+/* Experience Timeline Glow */
+.exp-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, #22d3ee, transparent);
+    animation: glow-line 4s infinite linear;
+}
+
+@keyframes glow-line {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+/* Specific text gradient */
+.text-gradient {
+    background: linear-gradient(to right, #22d3ee, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
