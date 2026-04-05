@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hicham Tbina | Visionary Electrical & Control Systems Engineer</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="bg-black text-white overflow-x-hidden antialiased">
+
+    <!-- 3D Canvas Background -->
+    <canvas id="webgl-canvas" class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none"></canvas>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-40 px-6 py-4 flex justify-between items-center mix-blend-difference">
+        <div class="font-['Syncopate'] text-2xl font-bold tracking-widest text-white logo-anim">HT.</div>
+        <div class="hidden md:flex space-x-8 font-['Space_Grotesk'] text-sm tracking-wide">
+            <a href="#about" class="nav-link hover:text-cyan-400 transition-colors">ABOUT</a>
+            <a href="#experience" class="nav-link hover:text-cyan-400 transition-colors">EXPERIENCE</a>
+            <a href="#projects" class="nav-link hover:text-cyan-400 transition-colors">PROJECTS</a>
+            <a href="#contact" class="nav-link hover:text-cyan-400 transition-colors">CONTACT</a>
+        </div>
+        <div class="flex items-center space-x-4">
+            <a href="cv_TBINA_Hicham.pdf" target="_blank" class="border border-white/30 hover:border-cyan-400 px-4 py-2 rounded-full text-xs font-['Space_Grotesk'] transition-all">RESUME</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+            
+            <!-- Hero Section -->
+            <section class="h-screen flex flex-col justify-center items-start px-6 md:px-20 relative">
+            <div class="hero-content z-10 pointer-events-auto w-[355vw]"> 
+                    <p class="font-['Space_Grotesk'] text-cyan-400 mb-4 tracking-[0.2em] uppercase reveal-text">Electrical & Control Systems Engineer</p>
+                    <h1 class="font-['Syncopate'] text-5xl md:text-8xl font-bold leading-tight uppercase mb-6 split-text">
+                        Hicham <br/> Tbina
+                    </h1>
+                    <p class="font-['Space_Grotesk'] text-gray-400 max-w-[300vw] text-lg md:text-xl leading-relaxed reveal-text-delay">
+                        Bridging the gap between hardware bring-up and intelligent control. I build autonomous systems, high-fidelity simulations, and embedded hardware that push boundaries.
+                    </p>
+                    <div class="mt-10 flex gap-6 reveal-button">
+                        <a href="#projects" class="bg-cyan-500 hover:bg-cyan-400 text-black px-8 py-4 rounded-full font-['Space_Grotesk'] font-bold transition-all transform hover:scale-105">EXPLORE WORK</a>
+                        <div class="flex gap-4 items-center">
+                            <a href="https://www.linkedin.com/in/hicham-tbina/" target="_blank" class="w-12 h-12 rounded-full border border-gray-600 flex items-center justify-center hover:border-cyan-400 hover:text-cyan-400 transition-all"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=eng.tbinahicham@gmail.com" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-full border border-gray-600 flex items-center justify-center hover:border-cyan-400 hover:text-cyan-400 transition-all"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Scroll indicator -->
+                <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-50 scroll-indicator">
+                    <span class="font-['Space_Grotesk'] text-xs tracking-[0.3em] mb-2 rotate-90 origin-bottom translate-y-[-20px]">SCROLL</span>
+                    <div class="w-[1px] h-16 bg-gradient-to-b from-white to-transparent"></div>
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="min-h-screen py-32 px-6 md:px-20 flex items-center">
+                <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    <div class="about-text">
+                        <h2 class="font-['Syncopate'] text-4xl md:text-6xl font-bold mb-8 uppercase section-title">Beyond<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">The Circuit</span></h2>
+                        <!-- Text rendered via canvas with pretext-style layout around the badge -->
+                        <div id="about-text-flow" class="mb-6"></div>
+                        
+                        <div class="mt-12 grid grid-cols-2 gap-8 font-['Space_Grotesk']">
+                            <div>
+                                <h4 class="text-cyan-400 font-bold mb-4 tracking-wider text-sm">CORE ARSENAL</h4>
+                                <ul class="space-y-2 text-gray-400 text-sm">
+                                    <li>MATLAB / Simulink (Stateflow)</li>
+                                    <li>C / C++ (Embedded)</li>
+                                    <li>Model Predictive Control (MPC)</li>
+                                    <li>Reinforcement Learning (RL)</li>
+                                    <li>PCB Design (Altium / KiCad)</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-cyan-400 font-bold mb-4 tracking-wider text-sm">HARDWARE</h4>
+                                <ul class="space-y-2 text-gray-400 text-sm">
+                                    <li>STM32 / ESP32 / Arduino</li>
+                                    <li>PLCnext / CODESYS</li>
+                                    <li>Power Electronics (SMPS)</li>
+                                    <li>Hardware-in-the-Loop (HIL)</li>
+                                    <li>Sensors & Actuators</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Profile Photo Container -->
+                    <!-- HOW TO ADD YOUR PHOTO: 
+                         1. Place your photo (e.g., 'profile.jpg') in the 'C:\Users\wwwhi\portfolio\' folder.
+                         2. Replace the 'src' URL in the img tag below with 'profile.jpg'.
+                    -->
+                    <!-- Badge injected here by initBadge() as position:fixed -->
+                    <div class="w-full h-[500px]" id="badge-right-col" aria-hidden="true"></div>
+                </div>
+            </section>
+
+            <!-- Experience Section -->
+            <section id="experience" class="py-32 px-6 md:px-20 bg-zinc-950/50 relative">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="font-['Syncopate'] text-4xl md:text-6xl font-bold mb-20 text-center uppercase section-title">Professional<br>Trajectory</h2>
+                    
+                    <div class="relative border-l border-cyan-500/30 ml-4 md:ml-0 md:pl-0 space-y-24 exp-timeline">
+                        
+                        <!-- Exp 1 -->
+                        <div class="exp-item relative pl-8 md:pl-12">
+                            <div class="absolute w-4 h-4 bg-cyan-400 rounded-full left-[-8px] top-1 shadow-[0_0_15px_#22d3ee]"></div>
+                            <div class="flex flex-col md:flex-row md:items-baseline md:justify-between mb-2">
+                                <h3 class="font-['Syncopate'] text-2xl font-bold text-white">Vulcain Engineering</h3>
+                                <span class="font-['Space_Grotesk'] text-cyan-400 tracking-wider text-sm mt-1 md:mt-0">Feb 2026 – Present</span>
+                            </div>
+                            <h4 class="font-['Space_Grotesk'] text-xl text-gray-300 mb-4">TCMS Control Systems Engineering Intern</h4>
+                            <p class="font-['Space_Grotesk'] text-gray-400 leading-relaxed mb-4">
+                                Modeling complex Medium Voltage Supply (MVS) functions using MATLAB Stateflow for train control systems. Implementing real-time data exchange via OPC UA with CODESYS for HMI integration.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs font-['Space_Grotesk'] px-3 py-1 bg-white/5 border border-white/10 rounded-full text-cyan-300">MATLAB Stateflow</span>
+                                <span class="text-xs font-['Space_Grotesk'] px-3 py-1 bg-white/5 border border-white/10 rounded-full text-cyan-300">OPC UA</span>
+                                <span class="text-xs font-['Space_Grotesk'] px-3 py-1 bg-white/5 border border-white/10 rounded-full text-cyan-300">CODESYS</span>
+                            </div>
+                        </div>
+
+                        <!-- Exp 2 -->
+                        <div class="exp-item relative pl-8 md:pl-12">
+                            <div class="absolute w-4 h-4 bg-gray-600 rounded-full left-[-8px] top-1"></div>
+                            <div class="flex flex-col md:flex-row md:items-baseline md:justify-between mb-2">
+                                <h3 class="font-['Syncopate'] text-2xl font-bold text-white">Lear Corporation R&D</h3>
+                                <span class="font-['Space_Grotesk'] text-gray-400 tracking-wider text-sm mt-1 md:mt-0">Jul 2025 – Sep 2025</span>
+                            </div>
+                            <h4 class="font-['Space_Grotesk'] text-xl text-gray-300 mb-4">Hardware R&D Engineering Intern</h4>
+                            <p class="font-['Space_Grotesk'] text-gray-400 leading-relaxed mb-4">
+                                Performed Worst-Case Analysis (WCA) and hardware validation for ideal diode circuits in automotive embedded systems. Automated hardware simulation workflows using VBA to optimize testing cycles.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs font-['Space_Grotesk'] px-3 py-1 bg-white/5 border border-white/10 rounded-full">Circuit Analysis</span>
+                                <span class="text-xs font-['Space_Grotesk'] px-3 py-1 bg-white/5 border border-white/10 rounded-full">VBA Automation</span>
+                                <span class="text-xs font-['Space_Grotesk'] px-3 py-1 bg-white/5 border border-white/10 rounded-full">Automotive HW</span>
+                            </div>
+                        </div>
+
+                        <!-- Exp 3 -->
+                        <div class="exp-item relative pl-8 md:pl-12">
+                            <div class="absolute w-4 h-4 bg-gray-600 rounded-full left-[-8px] top-1"></div>
+                            <div class="flex flex-col md:flex-row md:items-baseline md:justify-between mb-2">
+                                <h3 class="font-['Syncopate'] text-2xl font-bold text-white">Redal-BCC</h3>
+                                <span class="font-['Space_Grotesk'] text-gray-400 tracking-wider text-sm mt-1 md:mt-0">Jul 2024 – Sep 2024</span>
+                            </div>
+                            <h4 class="font-['Space_Grotesk'] text-xl text-gray-300 mb-4">Automation SCADA Engineering Intern</h4>
+                            <p class="font-['Space_Grotesk'] text-gray-400 leading-relaxed mb-4">
+                                Modernized industrial supervision systems by migrating SCADA Power CC to the LYNX platform, ensuring seamless grid management and digital transformation.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs font-['Space_Grotesk'] px-3 py-1 bg-white/5 border border-white/10 rounded-full">SCADA</span>
+                                <span class="text-xs font-['Space_Grotesk'] px-3 py-1 bg-white/5 border border-white/10 rounded-full">Systems Migration</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section (Grid leading to overlay pages) -->
+            <section id="projects" class="py-32 px-6 md:px-10">
+                <h2 class="font-['Syncopate'] text-4xl md:text-6xl font-bold mb-6 text-center uppercase section-title">Engineering<br>Showcase</h2>
+                <p class="text-center font-['Space_Grotesk'] text-gray-400 mb-20 max-w-2xl mx-auto">Click on any project to dive deep into the technical specifications, control architectures, and hardware implementations.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto" id="project-grid">
+                    <!-- Project cards injected via JS -->
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="min-h-[70vh] py-32 px-6 flex flex-col items-center justify-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-t from-cyan-900/20 to-transparent -z-10"></div>
+                <h2 class="font-['Syncopate'] text-5xl md:text-8xl font-bold mb-8 text-center uppercase relative z-10 contact-title">Initiate<br>Sequence</h2>
+                <p class="font-['Space_Grotesk'] text-xl text-gray-300 text-center max-w-2xl mb-12 relative z-10">
+                    Currently open for new opportunities, collaborations, and complex engineering challenges. Let's build the future together.
+                </p>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=eng.tbinahicham@gmail.com" target="_blank" rel="noopener noreferrer" class="relative inline-flex items-center justify-center px-10 py-5 overflow-hidden font-['Space_Grotesk'] font-bold text-white bg-transparent border-2 border-cyan-400 rounded-full hover:bg-cyan-400 hover:text-black transition-all duration-300 group z-10">
+                    <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
+                    <span class="relative">TRANSMIT MESSAGE</span>
+                </a>
+            </section>
+
+            <!-- Footer -->
+            <footer class="py-8 border-t border-white/10 text-center font-['Space_Grotesk'] text-sm text-gray-500">
+                <p>&copy; 2026 Hicham Tbina. Engineering Reality.</p>
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- Project Detail Overlay (Scrollable Page) -->
+    <div id="project-overlay" class="fixed inset-0 bg-zinc-950 z-50 transform translate-y-full transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] overflow-y-auto">
+        <div class="min-h-screen relative pb-32">
+            <!-- Close Button -->
+            <button id="close-overlay" class="fixed top-6 right-6 md:top-10 md:right-10 w-12 h-12 bg-white/10 hover:bg-cyan-500 hover:text-black rounded-full flex items-center justify-center backdrop-blur-md transition-all z-50">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <!-- Dynamic Content Container -->
+            <div id="overlay-content" class="w-full">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- SplitText alternative (simple custom script in main.js since SplitText is a club plugin) -->
+    
+    <script src="app.js"></script>
+</body>
+</html>
