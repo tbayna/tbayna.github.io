@@ -290,3 +290,21 @@ body {
 #about-text-canvas {
     display: block;
 }
+
+@media (max-width: 767px) {
+    #badge-card {
+        width: 160px !important;
+        transform-origin: 80px 21px !important;
+    }
+    .badge-photo-ring {
+        width: 55px;
+        height: 55px;
+    }
+    .badge-name { font-size: 7px; }
+    .badge-role-text { font-size: 6px; }
+    .badge-event-name { font-size: 5px; }
+    .badge-subevent { font-size: 4.5px; }
+    .badge-logo-abbr { font-size: 13px; }
+    .badge-barcode-lines { height: 18px; }
+    .badge-barcode-text { font-size: 4.5px; }
+}
