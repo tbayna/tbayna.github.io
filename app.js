@@ -543,11 +543,10 @@ const initBadge = () => {
     const badgeEl   = document.getElementById('badge-card');
 
     // ---- Config ----
-    const BADGE_W      = 300;
-    // HOLE_Y_OFFSET: distance from badge element top (y=0) to the hole centre.
-    // badge-clip-area is 32px, content = 7+3+14 = 24px, top pad ≈ 4px → hole = 21px.
+   const isMobile     = window.innerWidth < 768;
+    const BADGE_W      = isMobile ? 160 : 300;
     const HOLE_Y_OFFSET = 21;
-    const STRING_L     = 285;          // px
+    const STRING_L     = isMobile ? 140 : 215;
 
     // Extreme-right anchor: 78% desktop, center on mobile
     const getAnchorX = () => window.innerWidth < 768
