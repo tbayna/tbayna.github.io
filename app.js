@@ -549,8 +549,8 @@ const initBadge = () => {
     const STRING_L     = isMobile ? 140 : 215;
 
     // Extreme-right anchor: 78% desktop, center on mobile
-    const getAnchorX = () => window.innerWidth < 768
-        ? window.innerWidth * 0.50
+sconst getAnchorX = () => window.innerWidth < 768
+        ? window.innerWidth * 0.92
         : window.innerWidth * 0.78;
     let anchorX = getAnchorX();
     const anchorY = 0;
