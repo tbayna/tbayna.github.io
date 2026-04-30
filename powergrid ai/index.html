@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PowerGrid AI | Intelligent Microgrid Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fdfbf7;
+      --surface: #ffffff;
+      --text-main: #111827;
+      --text-muted: #4b5563;
+      --primary: #c2840c;
+      --primary-glow: rgba(194, 132, 12, 0.4);
+      --secondary: #1a7a3a;
+      --border: #e5e7eb;
+      --radius: 16px;
+      --shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Sora', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ════════ 3D ANIMATED BACKGROUND ════════ */
+    .bg-3d-container {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1; perspective: 1000px; overflow: hidden;
+      background: radial-gradient(circle at center, #ffffff 0%, #fdfbf7 100%);
+    }
+    .grid-3d {
+      position: absolute; bottom: -50%; left: -50%; width: 200%; height: 150%;
+      background-image: 
+        linear-gradient(to right, rgba(194, 132, 12, 0.08) 1px, transparent 1px),
+        linear-gradient(to top, rgba(194, 132, 12, 0.08) 1px, transparent 1px);
+      background-size: 60px 60px;
+      transform: rotateX(75deg) translateZ(-200px);
+      animation: moveGrid 15s linear infinite;
+      transform-style: preserve-3d;
+    }
+    .grid-glow {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at 50% 50%, transparent 20%, var(--bg) 70%);
+    }
+    @keyframes moveGrid {
+      0% { transform: rotateX(75deg) translateZ(-200px) translateY(0); }
+      100% { transform: rotateX(75deg) translateZ(-200px) translateY(60px); }
+    }
+    .orb {
+      position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.5;
+      animation: floatOrb 10s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 400px; height: 400px; background: rgba(194, 132, 12, 0.3); top: -100px; left: -100px; animation-delay: 0s; }
+    .orb-2 { width: 500px; height: 500px; background: rgba(29, 95, 194, 0.2); bottom: -200px; right: -100px; animation-delay: -5s; }
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(50px, 50px) scale(1.2); }
+    }
+
+    /* ════════ TYPOGRAPHY & LAYOUT ════════ */
+    h1, h2, h3 { font-weight: 700; letter-spacing: -0.03em; }
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; }
+    section { padding: 100px 0; }
+
+    /* Scroll Reveal */
+    .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1); }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+
+    /* ════════ NAVIGATION ════════ */
+    nav {
+      background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      position: fixed; top: 0; left: 0; right: 0; border-bottom: 1px solid rgba(255,255,255,0.3);
+      z-index: 100; padding: 16px 0; box-shadow: 0 4px 30px rgba(0,0,0,0.03);
+    }
+    .nav-content { display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 10px; color: var(--text-main); text-decoration: none;}
+    
+    .logo-3d { width: 30px; height: 30px; position: relative; transform-style: preserve-3d; animation: spin3D 8s linear infinite; }
+    .logo-3d .core { position: absolute; inset: 6px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 15px var(--primary); }
+    .logo-3d .ring { position: absolute; inset: 0; border: 2px solid var(--secondary); border-radius: 50%; transform: rotateX(60deg); }
+    .logo-3d .ring2 { position: absolute; inset: 0; border: 2px solid #2563eb; border-radius: 50%; transform: rotateY(60deg); }
+    @keyframes spin3D { 100% { transform: rotateY(360deg) rotateX(360deg); } }
+
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; transition: color 0.2s; font-weight: 500;}
+    .nav-links a:hover { color: var(--primary); }
+
+    /* ════════ BUTTONS ════════ */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 0.95rem;
+      text-decoration: none; transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1); border: none; cursor: pointer;
+      position: relative; overflow: hidden; z-index: 1;
+    }
+    .btn::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease; z-index: -1;
+    }
+    .btn:hover::before { left: 100%; }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), #a06b00); color: #fff; box-shadow: 0 8px 20px var(--primary-glow); }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 25px var(--primary-glow); color: #fff; }
+    .btn-outline { background: var(--surface); color: var(--text-main); border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .btn-outline:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+
+    /* ════════ HERO SECTION ════════ */
+    .hero { text-align: center; padding-top: 180px; padding-bottom: 60px; position: relative; }
+    .hero .badge {
+      display: inline-block; padding: 8px 16px; background: rgba(255,255,255,0.8);
+      color: var(--primary); border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+      margin-bottom: 24px; border: 1px solid rgba(194, 132, 12, 0.3); box-shadow: 0 4px 15px var(--primary-glow);
+      backdrop-filter: blur(10px);
+    }
+    .hero h1 {
+      font-size: 4rem; max-width: 900px; margin: 0 auto 24px; line-height: 1.1;
+      background: linear-gradient(135deg, #111827 0%, #4b5563 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 650px; margin: 0 auto 40px; }
+    .hero-actions { display: flex; gap: 16px; justify-content: center; }
+
+    /* ════════ TECH MARQUEE (NEW) ════════ */
+    .marquee-container {
+      width: 100%; overflow: hidden; background: rgba(255,255,255,0.5); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 20px 0; backdrop-filter: blur(5px); display: flex;
+    }
+    .marquee {
+      display: flex; gap: 40px; min-width: 200%;
+      animation: scrollMarquee 20s linear infinite;
+    }
+    .marquee span { font-size: 1.2rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px;}
+    @keyframes scrollMarquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* ════════ CONCEPT & FEATURES ════════ */
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 48px; perspective: 1000px;
+    }
+    .feature-card {
+      background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); padding: 40px 30px; border-radius: var(--radius);
+      border: 1px solid var(--border); box-shadow: var(--shadow); transition: transform 0.4s, box-shadow 0.4s; transform-style: preserve-3d;
+    }
+    .feature-card:hover { transform: translateY(-10px) rotateX(5deg) rotateY(-5deg); border-color: var(--primary); box-shadow: 0 20px 40px -10px rgba(194, 132, 12, 0.2); }
+    .feature-icon { font-size: 2.5rem; margin-bottom: 20px; display: inline-block; transform: translateZ(30px); }
+    .feature-card h3 { font-size: 1.3rem; margin-bottom: 12px; transform: translateZ(20px); }
+    .feature-card p { color: var(--text-muted); font-size: 0.95rem; transform: translateZ(10px); }
+
+    /* ════════ HOW IT WORKS (NEW) ════════ */
+    .timeline { position: relative; max-width: 800px; margin: 60px auto 0; }
+    .timeline::before { content: ''; position: absolute; top: 0; bottom: 0; left: 24px; width: 2px; background: var(--border); }
+    .timeline-step { position: relative; padding-left: 60px; margin-bottom: 40px; }
+    .timeline-step::before {
+      content: ''; position: absolute; left: 15px; top: 0; width: 20px; height: 20px;
+      background: var(--primary); border-radius: 50%; box-shadow: 0 0 10px var(--primary-glow);
+    }
+    .timeline-step h3 { font-size: 1.4rem; margin-bottom: 8px; }
+    .timeline-step p { color: var(--text-muted); }
+
+    /* ════════ USE CASES (NEW) ════════ */
+    .use-case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 40px; }
+    .use-case { background: var(--text-main); color: #fff; padding: 40px; border-radius: var(--radius); text-align: center; }
+    .use-case h3 { color: var(--primary); margin-bottom: 12px; }
+    .use-case p { color: #9ca3af; font-size: 0.9rem; }
+
+    /* ════════ SHOWCASE / SCREENSHOTS ════════ */
+    .showcase { background: #f3f4f6; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .section-header { text-align: center; margin-bottom: 40px; }
+    .section-header h2 { font-size: 2.8rem; margin-bottom: 16px; }
+    .gallery { display: grid; grid-template-columns: 1fr; gap: 60px; perspective: 1200px; }
+    .gallery-item { background: var(--surface); border-radius: 20px; padding: 20px; box-shadow: 0 20px 50px -10px rgba(0,0,0,0.1); border: 1px solid var(--border); transition: transform 0.5s; transform-style: preserve-3d; }
+    .gallery-item:hover { transform: scale(1.02) rotateX(2deg); box-shadow: 0 30px 60px -15px rgba(194, 132, 12, 0.2); border-color: var(--primary); }
+    .gallery-item img { width: 100%; height: auto; border-radius: 12px; display: block; border: 1px solid rgba(0,0,0,0.05); transform: translateZ(20px); }
+    .gallery-caption { padding: 24px 12px 8px; font-weight: 700; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; transform: translateZ(30px); }
+    .gallery-caption span { font-size: 0.8rem; color: var(--secondary); background: var(--grnbg); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(26,122,58,0.2); }
+
+    /* ════════ FAQ (NEW) ════════ */
+    .faq-container { max-width: 800px; margin: 40px auto 0; }
+    .faq-item { background: var(--surface); border: 1px solid var(--border); margin-bottom: 12px; border-radius: 8px; overflow: hidden; }
+    .faq-question { padding: 20px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .faq-answer { padding: 0 20px 20px; color: var(--text-muted); display: none; }
+    .faq-item.active .faq-answer { display: block; }
+    .faq-item.active .faq-question { color: var(--primary); }
+
+    /* ════════ CONTACT ════════ */
+    .cta-contact { text-align: center; max-width: 600px; margin: 0 auto; position: relative; z-index: 2;}
+    .contact-box { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); padding: 50px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 20px 40px rgba(0,0,0,0.08); margin-top: 40px; position: relative; overflow: hidden; }
+    .contact-box::before { content:''; position: absolute; top:-50%; left:-50%; width:200%; height:200%; background: conic-gradient(transparent, var(--primary-glow), transparent 30%); animation: spin3D 8s linear infinite; z-index: -1; opacity: 0.5; }
+    
+    footer { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); position: relative; z-index: 2; }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.8rem; }
+      .nav-links { display: none; }
+      .hero-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 3D Animated Background -->
+  <div class="bg-3d-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="grid-3d"></div>
+    <div class="grid-glow"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="container nav-content">
+      <a href="#" class="logo">
+        <div class="logo-3d"><div class="core"></div><div class="ring"></div><div class="ring2"></div></div>
+        PowerGrid AI
+      </a>
+      <div class="nav-links mono">
+        <a href="#concept">Concept</a>
+        <a href="#how-it-works">Process</a>
+        <a href="#showcase">Interface</a>
+        <a href="#faq">FAQ</a>
+        <!-- DIRECT GMAIL LINK -->
+        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=tbaynapowerai@gmail.com&su=PowerGrid%20AI%20Demo%20Request" target="_blank" class="btn btn-primary" style="padding: 8px 16px; color: white;">Open Gmail</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero reveal">
+    <div class="container">
+      <span class="badge mono">v1.0 Workspace Dashboard</span>
+      <h1>Intelligent Control for Next-Gen Microgrids</h1>
+      <p>Bridge the gap between predictive weather forecasting, energy market economics, and physical hardware limits. PowerGrid AI utilizes adaptive Reinforcement Learning to optimize your storage and generation assets.</p>
+      <div class="hero-actions">
+        <a href="#showcase" class="btn btn-primary">View the Interface</a>
+        <!-- DIRECT GMAIL LINK -->
+        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=tbaynapowerai@gmail.com&su=PowerGrid%20AI%20Inquiry" target="_blank" class="btn btn-outline">Request a Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Marquee -->
+  <div class="marquee-container reveal">
+    <div class="marquee">
+      <span>Powered by Reinforcement Learning</span> • <span>LSTM Neural Networks</span> • <span>Open-Meteo Integration</span> • <span>Grid-Forming Logic</span> • <span>Rule-Based Safety Shields</span> • 
+      <span>Powered by Reinforcement Learning</span> • <span>LSTM Neural Networks</span> • <span>Open-Meteo Integration</span> • <span>Grid-Forming Logic</span> • <span>Rule-Based Safety Shields</span>
+    </div>
+  </div>
+
+  <!-- Concept & Features -->
+  <section id="concept" class="container">
+    <div class="section-header reveal">
+      <h2>The Core Concept</h2>
+      <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto; font-size: 1.1rem;">A complete EMS pipeline designed for automation engineers, from component dimensioning to deploying certifiable Grid-Forming control strategies.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal" style="transition-delay: 0.1s;">
+        <div class="feature-icon">🏗️</div>
+        <h3>System Dimensioning</h3>
+        <p>Compute optimal sizing for Solar PV, Wind Turbines, BESS, and Supercapacitors based on highly localized load profiles and historical weather data.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay: 0.2s;">
+        <div class="feature-icon">🧠</div>
+        <h3>LSTM Forecasting</h3>
+        <p>Train localized neural networks to predict generation and load horizons. Feed high-accuracy forecasts directly into the RL agent's observation space.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay: 0.3s;">
+        <div class="feature-icon">⚖️</div>
+        <h3>Adaptive Optimization</h3>
+        <p>Balance profitability against hardware health. Custom reward functions allow you to penalize degradation, frequency deviation, and loss-of-load simultaneously.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay: 0.4s;">
+        <div class="feature-icon">🛡️</div>
+        <h3>Certifiable Control</h3>
+        <p>Deploy AI with confidence. Utilize Rule-Based Safety layers or MPC Shields to ensure the RL setpoints never violate battery SoC bounds or strict grid codes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works (Timeline) -->
+  <section id="how-it-works" class="showcase">
+    <div class="container reveal">
+      <div class="section-header">
+        <h2>From Data to Deployment</h2>
+        <p style="color: var(--text-muted);">How PowerGrid AI transforms raw parameters into actionable grid control.</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-step reveal">
+          <h3>1. Define Hardware & Topography</h3>
+          <p>Input your existing PV and wind assets, or let the AI auto-dimension the required capacities for your location and load profile.</p>
+        </div>
+        <div class="timeline-step reveal">
+          <h3>2. Train Predictive Models</h3>
+          <p>Pull historical data via Open-Meteo and train LSTM networks to predict weather constraints and load spikes up to 72 hours in advance.</p>
+        </div>
+        <div class="timeline-step reveal">
+          <h3>3. Design Reward Logic</h3>
+          <p>Use our visual slider interface to weight economic profit against battery degradation, harmonic distortion, and grid stability rules.</p>
+        </div>
+        <div class="timeline-step reveal">
+          <h3>4. Run Inference & Export</h3>
+          <p>Simulate the RL agent across custom timelines, analyze the State of Charge (SoC) behavior, and export the final policy weights for physical deployment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots / Showcase -->
+  <section id="showcase" class="container">
+    <div class="section-header reveal">
+      <h2>Built for Performance</h2>
+      <p style="color: var(--text-muted); font-size: 1.1rem;">A clean, data-dense interface tailored for complex engineering workflows.</p>
+    </div>
+    
+    <div class="gallery">
+      <div class="gallery-item reveal">
+        <img src="4.jpg" alt="PowerGrid AI Training Dashboard">
+        <div class="gallery-caption">
+          Live Inference & Dispatch Dashboard
+          <span class="mono">Results</span>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="6.jpg" alt="LSTM Forecaster Interface">
+        <div class="gallery-caption">
+          LSTM Neural Network Forecasting
+          <span class="mono">Prediction</span>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="1.jpg" alt="Microgrid Components Sizing">
+        <div class="gallery-caption">
+          Component Configuration & Auto-Sizing
+          <span class="mono">Hardware Dimensioning</span>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="2.jpg" alt="RL Goal Configuration">
+        <div class="gallery-caption">
+          Reinforcement Learning Reward Tuning
+          <span class="mono">Algorithm Config</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section class="showcase">
+    <div class="container reveal">
+      <div class="section-header">
+        <h2>Designed For</h2>
+      </div>
+      <div class="use-case-grid">
+        <div class="use-case">
+          <h3>Commercial Microgrids</h3>
+          <p>Minimize peak demand charges and optimize time-of-use tariffs for large facilities.</p>
+        </div>
+        <div class="use-case">
+          <h3>Remote & Islanded Grids</h3>
+          <p>Maximize renewable penetration and rely on Grid-Forming inverters for absolute stability.</p>
+        </div>
+        <div class="use-case">
+          <h3>Utility-Scale Storage</h3>
+          <p>Extend battery lifespan using degradation-aware RL policies while participating in energy markets.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="container">
+    <div class="section-header reveal">
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-container reveal">
+      <div class="faq-item" onclick="this.classList.toggle('active')">
+        <div class="faq-question">Does this integrate with physical PLCs? <span>+</span></div>
+        <div class="faq-answer">Yes, the final exported RL policies can be implemented in standard control hardware. Our "Rule-Based Safety" layer ensures the AI cannot output setpoints that would damage physical inverters or batteries.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('active')">
+        <div class="faq-question">What RL algorithms are supported? <span>+</span></div>
+        <div class="faq-answer">The platform currently supports state-of-the-art continuous control algorithms including SAC (Soft Actor-Critic), PPO, TD3, and DDPG. We highly recommend our custom Physics-Informed SAC mode.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('active')">
+        <div class="faq-question">Can I use my own weather/load data? <span>+</span></div>
+        <div class="faq-answer">Absolutely. While we integrate with Open-Meteo for synthetic testing, you can upload proprietary CSV data for generation (solar/wind irradiance) and local facility load profiles.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="container reveal">
+    <div class="cta-contact">
+      <h2>Ready to optimize your grid?</h2>
+      <p style="color: var(--text-muted); margin-top: 16px; font-size: 1.1rem;">Whether you are designing a new hybrid plant or looking to upgrade your existing EMS with AI-driven control strategies, let's talk.</p>
+      
+      <div class="contact-box">
+        <h3 style="margin-bottom: 8px;">Contact for Demos & Integration</h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">Reach out directly to the lead engineer and founder.</p>
+        
+        <!-- DIRECT GMAIL LINKS -->
+        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=tbaynapowerai@gmail.com&su=PowerGrid%20AI%20Partnership%20Inquiry" target="_blank" class="btn btn-primary" style="font-size: 1.1rem; padding: 16px 32px;">
+          Open Gmail to Contact Us
+        </a>
+        <p style="margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);" class="mono">tbaynapowerai@gmail.com</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container mono">
+      &copy; 2026 PowerGrid AI. All rights reserved.<br>
+      Intelligent Energy Management Systems.
+    </div>
+  </footer>
+
+  <script>
+    // Scroll Reveal Animation Script
+    document.addEventListener('DOMContentLoaded', () => {
+      const reveals = document.querySelectorAll('.reveal');
+      
+      const revealOnScroll = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            observer.unobserve(entry.target); 
+          }
+        });
+      }, {
+        threshold: 0.1, 
+        rootMargin: "0px 0px -50px 0px"
+      });
+
+      reveals.forEach(reveal => revealOnScroll.observe(reveal));
+      
+      setTimeout(() => {
+        reveals.forEach(reveal => {
+          const rect = reveal.getBoundingClientRect();
+          if(rect.top < window.innerHeight) {
+            reveal.classList.add('active');
+          }
+        });
+      }, 100);
+    });
+  </script>
+</body>
+</html>
